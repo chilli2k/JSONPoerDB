@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<title>accept data</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="http://​login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js​"></script>
+</head>
+  <body>
+
+    <form id="empForm" method="post">
+    <div class="form-group">
+      <span>
+      <label for="empId">Employee ID:</label> <label id="empIdMsg"> </label>
+      </span>
+    <input type="text" class="form-control" name="empId" id="empId" placeholder="Enter Employee ID" required>
+    </div>
+    <input type="button" class="btn btn-primary" id="empSave" value="Delete" onclick="deleteEmployee();"> <br><br>
+  </body>
+</html>
+<script>
+
+  $("#empId").focus();function validateAndGetFormData() {
+  var empIdVar = $("#empId").val();
+  if (empIdVar === "") {
+  alert("Employee ID Required Value");
+  $("#empId").focus();
+  return "";
+  }
+
+  var jsonStrObj = {
+  empId: empIdVar,
+  };
+  return JSON.stringify(jsonStrObj);
+  }
+  function createREMOVERecordRequest(token, dbName, relName, reqId) {
+    var req = "{\n"
+            + "\"token\" : \""
+            + token
+            + "\","
+            + "\"dbName\": \""
+            + dbName
+            + "\",\n" + "\"cmd\" : \"REMOVE\",\n"
+            + "\"rel\" : \""
+            + relName
+            + "\",\n" + "\"record\":"
+            + reqId
+            + "\n"
+            + "}";
+    return req;
+}
+
+function executeCommand(reqString, dbBaseUrl, apiEndPointUrl) {
+var url = dbBaseUrl + apiEndPointUrl;
+var jsonObj;
+$.post(url, reqString, function (result) {
+jsonObj = JSON.parse(result);
+}).fail(function (result) {
+var dataJsonObj = result.responseText;
+jsonObj = JSON.parse(dataJsonObj);
+});
+return jsonObj;
+}
+
+
+
+
+</script>
