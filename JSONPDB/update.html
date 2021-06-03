@@ -12,11 +12,11 @@ and open the template in the editor.
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<script src="http://​login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js​"></script>
+<script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
 </head>
 <body>
 <div class="container">
-<h2>Add employee datils</h2>
+<h2>update employee datils</h2>
 <form id="empForm" method="post">
 <div class="form-group">
   <span>
@@ -45,82 +45,19 @@ and open the template in the editor.
       <button class="button"  ><a href="home.html">Back </a><br></button><br><br>
 </div>
 <script>
-$("#empId").focus();function validateAndGetFormData() {
-var empIdVar = $("#empId").val();
-if (empIdVar === "") {
-alert("Employee ID Required Value");
-$("#empId").focus();
-return "";
-}
-var empNameVar = $("#empName").val();
-if (empNameVar === "") {
-alert("Employee Name is Required Value");
-$("#empName").focus();
-return "";
-}
-var empEmailVar = $("#empEmail").val();
-if (empEmailVar === "") {
-alert("Employee Email is Required Value");
-$("#empEmail").focus();
-return "";
-}
-var empPhoneVar = $("#empPhone").val();
-if (empPhoneVar === "") {
-alert("Employee Email is Required Value");
-$("#empEmail").focus();
-return "";
-}
-var empDOBVar = $("#empDOB").val();
-if (empDOBVar === "") {
-alert("Employee Email is Required Value");
-$("#empEmail").focus();
-return "";
-}
-var jsonStrObj = {
-empId: empIdVar,
-empName: empNameVar,
-empEmail: empEmailVar,
-empPhone: empPhoneVar,
-empDOB: empDOBVar,
-};
-return JSON.stringify(jsonStrObj);
-}
 
-
-
-
-// This method is used to create PUT Json request.
-function createUPDATERecordRequest(token, jsonObj, dbName, relName, reqId) {
-    var req = "{\n"
-            + "\"token\" : \""
-            + token
-            + "\","
-            + "\"dbName\": \""
-            + dbName
-            + "\",\n" + "\"cmd\" : \"UPDATE\",\n"
-            + "\"rel\" : \""
-            + relName
-            + "\",\n"
-            + "\"jsonStr\":{ \""
-            + reqId
-            + "\":\n"
-            + jsonObj
-            + "\n"
-            + "}}";
-    return req;
-}
 
 function executeCommand(reqString, dbBaseUrl, apiEndPointUrl) {
-var url = dbBaseUrl + apiEndPointUrl;
-var jsonObj;
-$.post(url, reqString, function (result) {
-jsonObj = JSON.parse(result);
-}).fail(function (result) {
-var dataJsonObj = result.responseText;
-jsonObj = JSON.parse(dataJsonObj);
-});
-return jsonObj;
-}
+            var url = dbBaseUrl + apiEndPointUrl;
+            var jsonObj;
+            $.post(url, reqString, function (result) {
+                jsonObj = JSON.parse(result);
+            }).fail(function (result) {
+                var dataJsonObj = result.responseText;
+                jsonObj = JSON.parse(dataJsonObj);
+            });
+            return jsonObj;
+        }
 
 function resetForm() {
 $("#empId").val("")
@@ -132,18 +69,29 @@ $("#empId").focus();
 }
 function saveEmployee()
 {
-  var jsonStr = validateAndGetFormData();
-  if (jsonStr === "") {
-  return;
-}
-var putReqStr = createUPDATERecordRequest("90935585|-31948841969713376|90933735",jsonStr, "Employee", "Emp-col");
-alert(putReqStr);
-jQuery.ajaxSetup({async: false});
-var resultObj = executeCommand(putReqStr,"http://api.login2explore.com:5577", "/api/iml");
-alert(JSON.stringify(resultObj));
-jQuery.ajaxSetup({async: true});
-resetForm();
-}
+            var token = "90935585|-31948841969713376|90933735";
+            var dbname = "Employee";
+            var relationName = "Emp-col";
+            var employeeID = parseInt(document.getElementById("empId").value);
+            var empName = document.getElementById("empEmail").value;
+            var empEmail = document.getElementById("empName").value;
+            var empPhone = document.getElementById("empPhone").value;
+            var empDOB = document.getElementById("empDOB").value;
+            var jsonObj = {
+              empName: empName,
+              empEmail: empEmail,
+              empPhone: empPhone,
+              empDOB: empDOB,
+            };
+            var reqString = createUPDATERecordRequest(token, JSON.stringify(jsonObj), dbname, relationName, employeeID);
+            alert(reqString);
+            jQuery.ajaxSetup({async: false});
+            var resultObj = executeCommand(reqString,
+                    "http://api.login2explore.com:5577", "/api/iml");
+            jQuery.ajaxSetup({async: true});
+            alert(JSON.stringify(resultObj));
+            resetForm();
+        }
 </script>
 </body>
 </html>
